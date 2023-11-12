@@ -1,0 +1,16 @@
+---
+version: '3.8'
+
+services:
+  runner:
+    image: github-runner-unx:latest
+    platform: linux
+    deploy:
+      mode: replicated
+      replicas: 2
+    build:
+      context: .
+      args:
+        RUNNER_VERSION: '2.311.0'
+    env_file:
+      ../.env
