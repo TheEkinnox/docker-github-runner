@@ -43,6 +43,10 @@ $reposArray = ($repos -split ',')
 foreach ($repo in $reposArray) {
     if ([System.IO.File]::Exists(".\\actions-runner.zip")) {
         Expand-Archive -Path ".\\actions-runner.zip" -DestinationPath ".\\runner-$repo"
+
+        if ($repo -eq $reposArray[-1]) {
+            Remove-Item ".\\actions-runner.zip" -Force
+        }
     }
 
     #Get Runner registration Token
@@ -62,6 +66,7 @@ foreach ($repo in $reposArray) {
         }
         else {
             & "./runner-$repo/config.cmd" --unattended --url "https://github.com/$owner/$repo" --token $regToken --name $runnerName --replace --runasservice
+            Start-Service "actions.runner.$owner-$repo.$runnerName"
         }
     }
     catch {
@@ -80,7 +85,7 @@ foreach ($repo in $reposArray) {
     }
 }
 
-Remove-Item ".\\actions-runner.zip" -Force
+./Cleanup-Runners.ps1
 
 #Remove PAT token after registering new instance
 $pat = $null
