@@ -7,10 +7,10 @@ services:
     platform: linux
     deploy:
       mode: replicated
-      replicas: 2
+      replicas: 1
     build:
       context: .
       args:
-        RUNNER_VERSION: '2.311.0'
+        RUNNER_VERSION: '2.314.1'
     env_file:
       ../.env
