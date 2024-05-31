@@ -14,7 +14,7 @@ cleanup() {
         TOKEN="${REG_TOKENS[$i]}"
 
         echo "Removing ${REPOSITORY} runner..."
-        /home/docker/actions-runner/runner-${REPOSITORY}/config.sh remove --token ${TOKEN}
+        /home/docker/actions-runner/runner-${REPOSITORY}/config.sh remove --unattended --token ${TOKEN}
     done
 }
 
@@ -31,6 +31,7 @@ for (( i=0; i<${#REPOS[@]}; ++i)); do
     cd /home/docker/actions-runner/runner-${REPOSITORY}
     tar -xzf ../actions-runner.tar.gz -C /home/docker/actions-runner/runner-${REPOSITORY}
 
+    ./config.sh remove --unattended --token ${REG_TOKEN}
     ./config.sh --unattended --url https://github.com/${GH_OWNER}/${REPOSITORY} --token ${REG_TOKEN} --name ${RUNNER_NAME}
 
     REG_TOKENS+=( ${REG_TOKEN} )

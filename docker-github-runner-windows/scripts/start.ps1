@@ -61,10 +61,14 @@ foreach ($repo in $reposArray) {
 
         #Start runner listener for jobs
         if ($repo -eq $reposArray[-1]) {
+            & "./runner-$repo/config.cmd" remove --unattended --token $regToken
             & "./runner-$repo/config.cmd" --unattended --url "https://github.com/$owner/$repo" --token $regToken --name $runnerName --replace
             & "./runner-$repo/run.cmd"
         }
         else {
+            Stop-Service $serviceName
+            Remove-Service $serviceName
+            & "./runner-$repo/config.cmd" remove --unattended --token $regToken
             & "./runner-$repo/config.cmd" --unattended --url "https://github.com/$owner/$repo" --token $regToken --name $runnerName --replace --runasservice
             Start-Service "actions.runner.$owner-$repo.$runnerName"
         }
@@ -76,6 +80,8 @@ foreach ($repo in $reposArray) {
             Stop-Service $serviceName
             Remove-Service $serviceName
         }
+
+		& "./runner-$repo/config.cmd" remove --unattended --token $regToken
     }
     finally {
         # Trap signal with finally - cleanup (When docker container is stopped remove runner registration from GitHub)
