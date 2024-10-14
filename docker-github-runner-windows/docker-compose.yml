@@ -9,6 +9,6 @@ services:
     build:
       context: .
       args:
-        RUNNER_VERSION: '2.316.0'
+        RUNNER_VERSION: '2.320.0'
     env_file:
       ../.env
